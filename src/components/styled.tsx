@@ -40,13 +40,22 @@ export const BoardBackground = styled.div`
 export const BoardCell = styled.div<{
   isOddRow: boolean;
   isLegalMove?: boolean;
+  containsPlayable: boolean;
 }>`
   display: grid;
   place-items: center;
 
-  ${({ isOddRow, isLegalMove }) => {
+  ${({ containsPlayable, isOddRow, isLegalMove }) => {
+    const getDarkColor = () => {
+      if (isLegalMove) return '#87b5da';
+
+      if (containsPlayable) return '#0c2027';
+
+      return '#1c3f5b';
+    };
+
     const lightColor = '#4f788e';
-    const darkColor = isLegalMove ? '#87b5da' : '#1c3f5b';
+    const darkColor = getDarkColor(); // isLegalMove ? '' : '';
     const bg = isOddRow ? lightColor : darkColor;
     const oBg = isOddRow ? darkColor : lightColor;
 

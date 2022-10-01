@@ -8,7 +8,7 @@ interface Props {
 }
 
 const CheckerComponent: React.FC<Props> = ({ id }) => {
-  const { forcePlayingChecker, playing, board, handleCheckerClick } = useGameContext();
+  const { forcePlayingChecker, playableCheckers, playing, board, handleCheckerClick } = useGameContext();
 
   const checker = Array.from(board.values()).find((checker) => checker.id === id);
 
@@ -18,6 +18,8 @@ const CheckerComponent: React.FC<Props> = ({ id }) => {
 
   const isPlayable = useMemo(() => {
     if (forcePlayingChecker) return forcePlayingChecker.id === id;
+
+    if (playableCheckers) return Boolean(playableCheckers.find((playableChecker) => playableChecker.id === id));
 
     return color === playing;
   }, [forcePlayingChecker, playing]);

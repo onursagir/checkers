@@ -19,7 +19,7 @@ const cellFactory = Array.from({ length: boardSize * boardSize }).map((_, i) => 
 });
 
 export const Checkerboard: React.FC = () => {
-  const { board, legalMoves, handleCellClick } = useGameContext();
+  const { board, legalMoves, playableCheckers, handleCellClick } = useGameContext();
 
   return (
     <Styled.Board size={boardSize}>
@@ -28,16 +28,20 @@ export const Checkerboard: React.FC = () => {
       ))}
       <Styled.BoardBackground>
         {cellFactory.map(({ x, y }) => {
-          const v = vector(x, y);
+          const position = vector(x, y);
+          const id = stringifyVector(position);
           const legalMove = legalMoves?.find((legalMove) =>
-            compareVector(legalMoveIsKillable(legalMove) ? legalMove.movesTo : legalMove, v)
+            compareVector(legalMoveIsKillable(legalMove) ? legalMove.movesTo : legalMove, position)
           );
+
+          const cellsWithPlayableCheckers = playableCheckers?.map(({ position }) => stringifyVector(position));
 
           return (
             <Styled.BoardCell
-              key={stringifyVector(v)}
+              key={id}
               isOddRow={y % 2 === 1}
               isLegalMove={Boolean(legalMove)}
+              containsPlayable={Boolean(cellsWithPlayableCheckers?.includes(id))}
               onClick={() => Boolean(legalMove) && handleCellClick(legalMove as App.LegalMove)}
             />
           );

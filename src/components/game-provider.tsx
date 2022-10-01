@@ -8,6 +8,7 @@ interface Value {
   playing: CheckerColor;
   winner: CheckerColor | null;
   legalMoves: App.LegalMoves | null;
+  playableCheckers: App.Checker[] | null;
   forcePlayingChecker?: App.Checker | null;
   handleCheckerClick(checker: App.Checker): void;
   handleCellClick(moveTo: App.LegalMove): void;
@@ -37,6 +38,7 @@ export const GameProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
         winner: state.winner,
         playing: state.playing,
         legalMoves: state.legalMoves,
+        playableCheckers: state.playableCheckers,
         forcePlayingChecker: state.forcePlayingChecker,
         handleCheckerClick,
         handleCellClick,

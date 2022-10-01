@@ -96,6 +96,10 @@ declare namespace App {
     (data: Partial<Checker>): Checker;
   }
 
+  export interface GetPlayableCheckers {
+    (board: Board, color: CheckerColor): Checker[] | null;
+  }
+
   export interface BoardFactory {
     (): Board;
   }

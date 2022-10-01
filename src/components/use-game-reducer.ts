@@ -3,6 +3,7 @@ import { stringifyVector } from '../math/stringify-vector';
 import { CheckerColor } from '../utils/checker-color';
 import { getKillableOpponents } from '../utils/get-killable-opponents';
 import { getLegalMoves } from '../utils/get-legal-moves';
+import { getPlayableCheckers } from '../utils/get-playable-checkers';
 import { getWinner } from '../utils/get-winner';
 import { makeBoard } from '../utils/make-board';
 import { moveChecker } from '../utils/move-checker';
@@ -13,6 +14,7 @@ interface State {
   winner: CheckerColor | null;
   legalMoves: App.LegalMoves | null;
   selectedChecker: App.Checker | null;
+  playableCheckers: App.Checker[] | null;
   forcePlayingChecker: App.Checker | null;
 }
 
@@ -41,11 +43,12 @@ type Action = MoveAction | SelectChecker | KillOpponent | Restart;
 const getInvertedPlaying = (playing: CheckerColor) =>
   playing === CheckerColor.WHITE ? CheckerColor.BLACK : CheckerColor.WHITE;
 
-const makeState = () => ({
+const makeState = (): State => ({
   winner: null,
   legalMoves: null,
   board: makeBoard(),
   selectedChecker: null,
+  playableCheckers: null,
   forcePlayingChecker: null,
   playing: CheckerColor.WHITE,
 });
@@ -61,11 +64,14 @@ const reducer = (state: State, action: Action): State => {
 
       boardCopy.delete(stringifyVector(state.selectedChecker.position));
 
+      const playing = getInvertedPlaying(state.playing);
+
       return {
         ...state,
+        playing,
         board: boardCopy,
         legalMoves: null,
-        playing: getInvertedPlaying(state.playing),
+        playableCheckers: getPlayableCheckers(boardCopy, playing),
       };
     }
     case 'selectChecker': {
@@ -104,16 +110,20 @@ const reducer = (state: State, action: Action): State => {
           legalMoves: consequentialKills,
           selectedChecker: newSelectedChecker,
           forcePlayingChecker: newSelectedChecker,
+          playableCheckers: [newSelectedChecker],
         };
+
+      const playing = getInvertedPlaying(state.playing);
 
       return {
         ...state,
+        playing,
         board: copy,
         legalMoves: null,
         selectedChecker: null,
         winner: getWinner(copy),
         forcePlayingChecker: null,
-        playing: getInvertedPlaying(state.playing),
+        playableCheckers: getPlayableCheckers(copy, playing),
       };
     }
     case 'restart':
