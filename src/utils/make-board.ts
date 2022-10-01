@@ -1,6 +1,7 @@
 import { stringifyVector } from '../math/stringify-vector';
 import { vector } from '../math/vector';
 import { CheckerColor } from './checker-color';
+import { makeChecker } from './make-checker';
 
 export const makeBoard: App.BoardFactory = function () {
   const board: App.Board = new Map();
@@ -16,11 +17,14 @@ export const makeBoard: App.BoardFactory = function () {
     };
     const position = vector(column + 1 + getOddRowOffset(), row + 1);
 
-    board.set(stringifyVector(position), {
-      color,
-      position,
-      id: id,
-    });
+    board.set(
+      stringifyVector(position),
+      makeChecker({
+        color,
+        position,
+        id: id,
+      })
+    );
   };
 
   for (let i = 0; i <= 22; i += 2) addChecker(i, CheckerColor.WHITE);
