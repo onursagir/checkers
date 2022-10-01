@@ -20,9 +20,10 @@ export const makeBoard: App.BoardFactory = function () {
     board.set(
       stringifyVector(position),
       makeChecker({
+        id,
         color,
         position,
-        id: id,
+        isCrowned: false,
       })
     );
   };
