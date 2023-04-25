@@ -1,0 +1,17 @@
+name: Build and Deploy
+on: [push]
+permissions:
+  contents: write
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          node-version: 18
+      - run: yarn && yarn build
+      - uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
