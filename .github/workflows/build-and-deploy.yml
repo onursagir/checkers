@@ -7,11 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
           cache: pnpm
           node-version: 18
-      - run: pnpm && pnpm build
+      - run: pnpm i && pnpm build
       - uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
